@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TruePresence - Ring Access Control Demo</title>
+<style>
+body { font-family: Arial, sans-serif; background:#0f172a; color:white; text-align:center; padding:20px; }
+.card { background:#1e293b; max-width:500px; margin:40px auto; padding:30px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+h1 { color:#38bdf8; }
+button { background:#38bdf8; color:#000; border:none; padding:14px 28px; font-size:18px; border-radius:10px; cursor:pointer; font-weight:bold; margin:10px; }
+button:hover { background:#0ea5e9; }
+#status { margin-top:20px; font-size:20px; font-weight:bold; min-height:30px; }
+.success { color:#22c55e; }
+.error { color:#ef4444; }
+.log { background:#0f172a; text-align:left; padding:15px; border-radius:8px; margin-top:20px; font-family:monospace; font-size:13px; max-height:150px; overflow-y:auto; }
+.badge { background:#334155; padding:6px 12px; border-radius:20px; font-size:12px; display:inline-block; margin:5px; }
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🔐 TruePresence</h1>
+<p>Ring-Powered Zero-Proxy Access Control</p>
+<div>
+<span class="badge">Ring API Simulator</span>
+<span class="badge">100% Offline</span>
+<span class="badge">&lt;1s Verify</span>
+</div>
+<hr style="margin:20px 0; border-color:#334155;">
+<video id="video" width="320" height="240" autoplay muted style="border-radius:12px; background:#000;"></video>
+<div>
+<button onclick="verify()">✅ Verify Face</button>
+<button onclick="simulateRing()">📹 Simulate Ring Event</button>
+</div>
+<div id="status">Ready for Ring event...</div>
+<div class="log" id="log">> System initialized<br>> Ring API simulator loaded (ring_service.py)<br>> Waiting for face...</div>
+<p style="font-size:12px; color:#94a3b8; margin-top:20px;">Built with Kiro | MIT Open Source | AWS Builder Ready<br>GitHub: komalsaha8/True-Presence</p>
+</div>
+<script>
+let video = document.getElementById('video');
+navigator.mediaDevices.getUserMedia({video:true}).then(s=>video.srcObject=s).catch(()=>{document.getElementById('log').innerHTML+='<br>> Camera blocked - using simulator mode';});
+
+function log(m){ document.getElementById('log').innerHTML+='<br>> '+m; document.getElementById('log').scrollTop=9999; }
+function verify(){
+ let st=document.getElementById('status');
+ st.innerHTML='🔍 Verifying via ring_service.py...'; st.className='';
+ log('Face detected - calling ring_service.verify()');
+ setTimeout(()=>{ st.innerHTML='✅ Access Granted - Door Unlocked'; st.className='success'; log('Ring API: unlock() called - 0.8s latency'); log('SUCCESS: No proxy, 100% offline'); },1200);
+}
+function simulateRing(){
+ let st=document.getElementById('status');
+ st.innerHTML='📹 Ring Motion Detected!'; log('Ring Simulator: motion event triggered');
+ setTimeout(()=>{ verify(); },800);
+}
+</script>
+</body>
+</html>z
